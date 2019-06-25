@@ -1,0 +1,15 @@
+{
+    "extends": ["tslint-microsoft-contrib", "tslint:latest", "tslint-config-prettier"],
+    "rules": {
+        "no-default-export": true,
+        "no-implicit-dependencies": [true, ["src"]],
+        "no-submodule-imports": [true, "src"],
+        "no-relative-imports": [false, "allow-siblings"],
+        "no-consecutive-blank-lines": true,
+        "object-literal-sort-keys": false,
+        "ordered-imports": false,
+        "quotemark": [false, "single"],
+        "no-import-side-effect": false,
+        "variable-name": [true, "allow-leading-underscore"]
+    }
+}
