@@ -5,6 +5,12 @@ import * as dotenv from 'dotenv';
 import * as mongoose from 'mongoose';
 import * as path from 'path';
 import * as cors from 'cors';
+import * as passport from 'passport';
+import * as session from 'express-session';
+import * as lusca from 'lusca';
+
+import './config/passport';
+import {ErrorHandler} from './handlers/error_handler';
 
 /**
  * Main application class to run server.
@@ -16,6 +22,8 @@ export class App {
     private db: mongoose.Connection;
     private mode: string;
     private readonly routes: express.Router[] = [];
+    private readonly errorHandler: ErrorHandler;
+    // private readonly passportConfig: PassportConfig = new PassportConfig();
 
     /**
      * Constructor method invoked when class App gets instantiated.
@@ -25,8 +33,10 @@ export class App {
         this.app = express();
         this.port = port;
         this.app.set('port', port); // tslint:disable-line: no-backbone-get-set-outside-model
-        this.config();
-        this.database();
+        this.errorHandler = new ErrorHandler();
+        this.connectToDatabase();
+        this.configureApp();
+        this.initializeErrorHandling();
     }
 
     /**
@@ -63,7 +73,7 @@ export class App {
     /**
      * @returns Nothing. Method sets up database configuration.
      */
-    private database(): void {
+    private connectToDatabase(): void {
         // tslint:disable-next-line: prefer-type-cast
         (mongoose as any).Promise = global.Promise;
 
@@ -87,7 +97,7 @@ export class App {
     /**
      * @returns Nothing. Method sets up app configuration.
      */
-    private config(): void {
+    private configureApp(): void {
         // Support for application/json
         this.app.use(bodyParser.json());
 
@@ -103,5 +113,25 @@ export class App {
         // Environment setting.
         this.mode = process.env.NODE_ENV === undefined ? 'development' : 'production';
         dotenv.config();
+
+        // Session middleware.
+        this.app.use(session({resave: true, saveUninitialized: true, secret: process.env.SESSION_SECRET}));
+
+        // Passport setup
+        this.app.use(passport.initialize());
+        // tslint:disable-next-line: no-unsafe-any
+        this.app.use(passport.session());
+        // this.app.use(this.passportConfig.init);
+
+        // Web app security middleware
+        this.app.use(lusca.xframe('SAMEORIGIN'));
+        this.app.use(lusca.xssProtection(true));
+    }
+
+    /**
+     * @returns Nothing. Method initializes error handling service.
+     */
+    private initializeErrorHandling() {
+        this.app.use(this.errorHandler.middlewareError);
     }
 }

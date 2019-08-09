@@ -10,15 +10,17 @@
         "baseUrl": "/",
         "jsx": "react",
         "noImplicitAny": true,
+        "typeRoots": ["./src/typings/*.d.ts"]
     },
     "include": [
         "lib/**/*.ts",
-        "./src/**/*"
+        "interfaces"
+        // "./src/**/*"
     ],
     "exclude": [
         "node_modules",
-        "./src/node_modules",
-        "./dist",
-        "./src/assets"
+        "src/node_modules",
+        "dist",
+        "src/assets"
     ]
 }
