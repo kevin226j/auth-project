@@ -67,7 +67,7 @@ const userSchema: Schema = new Schema({
     },
 });
 
-// Add method to User Schema to check if passwords match
+// Add method to User Schema to check if passwords match, return true if passwords match.
 userSchema.methods.isValidPassword = async function(enteredPassword: string) {
     try {
         // Verify if entered password matches the user's stored password.

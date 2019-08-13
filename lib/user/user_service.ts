@@ -7,7 +7,7 @@ import {Request, Response, NextFunction} from 'express';
 export class UserService {
     public passportJWT = passport.authenticate('jwt', {session: false});
 
-    public passportSignIn = (req: Request, res: Response, next: NextFunction) => {
+    public passportLogin = (req: Request, res: Response, next: NextFunction) => {
         // tslint:disable: no-unsafe-any
         try {
             passport.authenticate('local', {session: false}, (error, user, info) => {
@@ -16,7 +16,7 @@ export class UserService {
                         // tslint:disable-next-line: no-void-expression
                         return next(error);
                     }
-                    !user ? res.status(401).send({error: 'Invalid username and/or password', info}) : next();
+                    !user ? res.status(401).send({error: 'Unauthorized', info}) : next();
                 });
             })(req, res, next);
         } catch (error) {

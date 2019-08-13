@@ -9,7 +9,7 @@ import * as passport from 'passport';
 import * as session from 'express-session';
 import * as lusca from 'lusca';
 
-import './config/passport';
+// import './config/passport';
 import {ErrorHandler} from './handlers/error_handler';
 
 /**
