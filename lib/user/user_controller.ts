@@ -68,8 +68,10 @@ export class UserController {
     };
 
     public login = async (req: Request, res: Response, next: NextFunction) => {
-        const userData: IUser = req.body;
+        // Retrieve user data from auth local strategy.
+        const userData: IUser = req.user;
 
+        // Sign token
         const token: IToken = this._util.signToken(userData);
 
         // Set Cookie Header

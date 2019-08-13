@@ -23,13 +23,12 @@ export class UserRoutes {
     public init() {
         this.router
             .route('/login')
-            .post(
-                validateModel(userValidation.authSchema),
-                this.userService.passportLogin,
-                this.passport.isAuthenticated,
-                this.userController.login
-            );
+            .post(validateModel(userValidation.authSchema), this.userService.authLocal, this.userController.login);
 
         this.router.route('/register').post(validateModel(userValidation.authSchema), this.userController.registration);
+
+        this.router.route('/test').get(this.userService.authJWT, (req: any, res: any, next: any) => {
+            res.json({message: 'Made it!'});
+        });
     }
 }

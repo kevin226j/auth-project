@@ -1,11 +1,10 @@
 import * as passport from 'passport';
-import * as passportJWT from 'passport-jwt';
 import * as dotenv from 'dotenv';
 
 import {Request, Response, NextFunction} from 'express';
 
 import {userModel as User} from '../user/user_model';
-import {Local as LocalStrategy} from './strategies';
+import {Local as LocalStrategy, JWT as JWTStrategy} from './strategies';
 
 dotenv.config();
 
@@ -17,6 +16,7 @@ dotenv.config();
  */
 export class Passport {
     private readonly localStrategy: LocalStrategy = new LocalStrategy();
+    private readonly jwtStrategy: JWTStrategy = new JWTStrategy();
 
     public init = (): void => {
         passport.serializeUser<any, any>((user, done) => {
@@ -36,8 +36,10 @@ export class Passport {
         try {
             // Add strategies here.
             this.localStrategy.init(passport);
+            this.jwtStrategy.init(passport);
         } catch (error) {
             // add log here.
+            throw new Error(error);
         }
     };
 

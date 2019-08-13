@@ -1,5 +1,5 @@
 import * as passportLocal from 'passport-local';
-import {userModel as User, userModel} from '../../user/user_model';
+import {userModel as User} from '../../user/user_model';
 
 const localStrategy = passportLocal.Strategy;
 
@@ -9,8 +9,6 @@ const localStrategy = passportLocal.Strategy;
  * Passport Local Strategy
  */
 export class Local {
-    public user = new User();
-
     public init = (_passport: any) => {
         _passport.use(
             new localStrategy(
@@ -41,6 +39,7 @@ export class Local {
 
                                 // Return user if
                                 if (isValid) {
+                                    console.log('user info: ' + user);
                                     done(undefined, user);
                                 } else {
                                     done(undefined, false, {message: 'Invalid e-mail and/or password.'});

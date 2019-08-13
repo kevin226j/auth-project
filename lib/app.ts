@@ -121,7 +121,6 @@ export class App {
         this.app.use(passport.initialize());
         // tslint:disable-next-line: no-unsafe-any
         this.app.use(passport.session());
-        // this.app.use(this.passportConfig.init);
 
         // Web app security middleware
         this.app.use(lusca.xframe('SAMEORIGIN'));
