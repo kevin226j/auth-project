@@ -9,8 +9,7 @@ import * as passport from 'passport';
 import * as session from 'express-session';
 import * as lusca from 'lusca';
 
-// import './config/passport';
-import {ErrorHandler} from './handlers/error_handler';
+import {Handler} from './exception/handler';
 
 /**
  * Main application class to run server.
@@ -22,8 +21,7 @@ export class App {
     private db: mongoose.Connection;
     private mode: string;
     private readonly routes: express.Router[] = [];
-    private readonly errorHandler: ErrorHandler;
-    // private readonly passportConfig: PassportConfig = new PassportConfig();
+    private readonly handler: Handler = new Handler();
 
     /**
      * Constructor method invoked when class App gets instantiated.
@@ -33,10 +31,8 @@ export class App {
         this.app = express();
         this.port = port;
         this.app.set('port', port); // tslint:disable-line: no-backbone-get-set-outside-model
-        this.errorHandler = new ErrorHandler();
-        this.connectToDatabase();
         this.configureApp();
-        this.initializeErrorHandling();
+        this.connectToDatabase();
     }
 
     /**
@@ -47,9 +43,12 @@ export class App {
         this.app.use(express.static(path.resolve(__dirname, '..', 'dist', 'public')));
 
         // Serve production files.
-        this.app.get('*', (req: express.Request, res: express.Response) => {
+        this.app.get('/', (req: express.Request, res: express.Response) => {
             res.sendFile(path.resolve(__dirname, '..', 'dist', 'public', 'index.html'));
         });
+
+        // Initialize error handling as last configured middleware in App.
+        this.initializeErrorHandling();
 
         // tslint:disable-next-line: no-backbone-get-set-outside-model
         this.app.listen(this.app.get('port'), () => {
@@ -124,6 +123,7 @@ export class App {
 
         // Web app security middleware
         this.app.use(lusca.xframe('SAMEORIGIN'));
+
         this.app.use(lusca.xssProtection(true));
     }
 
@@ -131,6 +131,10 @@ export class App {
      * @returns Nothing. Method initializes error handling service.
      */
     private initializeErrorHandling() {
-        this.app.use(this.errorHandler.middlewareError);
+        // Server errors
+        this.app.use(this.handler.clientErrorHandler);
+
+        // 404 Not Found.
+        this.handler.notFoundHandler(this.app);
     }
 }

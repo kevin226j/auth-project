@@ -23,12 +23,13 @@ export class UserRoutes {
     public init() {
         this.router
             .route('/login')
-            .post(validateModel(userValidation.authSchema), this.userService.authLocal, this.userController.login);
+            .post(validateModel(userValidation.model), this.userService.authLocal, this.userController.login);
 
-        this.router.route('/register').post(validateModel(userValidation.authSchema), this.userController.registration);
+        this.router.route('/register').post(validateModel(userValidation.model), this.userController.registration);
 
+        // Test Route to check if passport JWT strategy authenticates.
         this.router.route('/test').get(this.userService.authJWT, (req: any, res: any, next: any) => {
-            res.json({message: 'Made it!'});
+            res.status(200).send({message: 'Made it through!'});
         });
     }
 }

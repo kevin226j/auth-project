@@ -1,6 +1,7 @@
 import * as passportJWT from 'passport-jwt';
 import * as dotenv from 'dotenv';
 import {userModel as User} from '../../user/user_model';
+import {Handler} from '../../exception/handler';
 
 dotenv.config();
 const jwtStrategy = passportJWT.Strategy;
@@ -20,23 +21,22 @@ export class JWT {
                 },
                 async (payload: any, done) => {
                     try {
-                        // Check for expiration date
-                        if (payload.exp < Date.now()) {
-                            done(undefined, false, {message: 'token expired'});
-                        }
-
                         // Find the user specified in token
                         const user = await User.findById(payload.sub).exec();
 
-                        // If user doesn't exist, handle it.
-                        if (!user) {
-                            done(undefined, false, {message: 'User does not exist with given token'});
+                        // Check for token expiration date
+                        if (payload.exp < Date.now()) {
+                            // If token is expired return error.
+                            done('Token Expired.', false);
+                        } else if (!user) {
+                            // If user doesn't exist, handle it.
+                            done('User does not exist with given token', false);
+                        } else {
+                            // Otherwise return the user
+                            done(undefined, user);
                         }
-
-                        // Otherwise return the user
-                        done(undefined, user);
                     } catch (error) {
-                        done(error);
+                        throw new Handler().errorResponse(error.name, error.message);
                     }
                 }
             )

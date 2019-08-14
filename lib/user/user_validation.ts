@@ -1,7 +1,7 @@
 import * as joi from 'joi';
 
 export const userValidation = {
-    authSchema: joi.object().keys({
+    model: joi.object().keys({
         name: joi.string(),
         email: joi
             .string()

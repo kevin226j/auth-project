@@ -1,5 +1,6 @@
 import * as passportLocal from 'passport-local';
 import {userModel as User} from '../../user/user_model';
+import {Handler} from '../../exception/handler';
 
 const localStrategy = passportLocal.Strategy;
 
@@ -39,7 +40,6 @@ export class Local {
 
                                 // Return user if
                                 if (isValid) {
-                                    console.log('user info: ' + user);
                                     done(undefined, user);
                                 } else {
                                     done(undefined, false, {message: 'Invalid e-mail and/or password.'});
@@ -47,7 +47,7 @@ export class Local {
                             }
                         });
                     } catch (error) {
-                        done(error);
+                        throw new Handler().errorResponse(error.name, error.message);
                     }
                 }
             )

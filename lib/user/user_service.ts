@@ -1,5 +1,6 @@
 import * as passport from 'passport';
 import {Request, Response, NextFunction} from 'express';
+import {Handler} from '../exception/handler';
 
 // tslint:disable: no-unsafe-any
 
@@ -8,30 +9,32 @@ import {Request, Response, NextFunction} from 'express';
  */
 export class UserService {
     public authJWT = (req: Request, res: Response, next: NextFunction) => {
-        // Reminder, do not use authorization bearer scheme in http headers.
-        if (req.headers.authorization.includes('bearer')) {
-            res.send({error: 'Use JWT Authorization Scheme'});
-        }
-        passport.authenticate('jwt', {session: false}, (error, user, info) => {
-            if (error) {
-                // Add logging information
-                console.log(error, info);
-            } else if (!user) {
-                res.send({error, info});
+        try {
+            // Reminder, do not use authorization bearer scheme in http headers.
+            if (req.headers.authorization.includes('bearer')) {
+                return res.status(400).send(new Handler().errorResponse('Use JWT Authorization Scheme.'));
             } else {
-                next();
+                passport.authenticate('jwt', {session: false}, (error, user, info) => {
+                    if (error || !user) {
+                        res.status(400).send(new Handler().errorResponse(error, info));
+                    } else {
+                        next();
+                    }
+                })(req, res, next);
             }
-        })(req, res, next);
+        } catch (error) {
+            throw new Handler().errorResponse(error.name, error.message);
+        }
     };
 
     public authLocal = (req: Request, res: Response, next: NextFunction) => {
         passport.authenticate('local', {session: false}, (error, user, info) => {
             req.logIn(user, () => {
                 if (error) {
-                    // tslint:disable-next-line: no-void-expression
-                    return next(error);
+                    res.status(400).send(new Handler().errorResponse(error, info));
+                } else {
+                    !user ? res.status(401).send(new Handler().errorResponse('Unauthorized User.', info)) : next();
                 }
-                !user ? res.status(401).send({error: 'Unauthorized', info}) : next();
             });
         })(req, res, next);
     };

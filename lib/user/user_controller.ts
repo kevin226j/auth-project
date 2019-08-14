@@ -4,7 +4,7 @@ import * as bcrypt from 'bcryptjs';
 import {Request, Response, NextFunction} from 'express';
 import {userModel as User} from './user_model';
 import {IUser, IToken} from '../../interfaces';
-import {UserAlreadyExistsException} from '../handlers/userAlreadyExists_exception';
+import {Handler} from '../exception/handler';
 
 dotenv.config();
 
@@ -27,10 +27,12 @@ export class UserController {
     public registration = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const userData: IUserData = req.body;
+
             const foundUser = await this.user.findOne({'local.email': userData.email}).exec();
+
             if (foundUser) {
                 // If user is found, throw an exception.
-                next(new UserAlreadyExistsException(userData.email));
+                res.status(400).send(new Handler().errorResponse(`Email ${userData.email} already exists in system.`));
             } else {
                 // Create new user based on User Schema
                 const newUser = new User({
@@ -63,11 +65,11 @@ export class UserController {
                 res.status(200).json({token});
             }
         } catch (error) {
-            res.send({error});
+            throw new Handler().errorResponse(error.name, error.message);
         }
     };
 
-    public login = async (req: Request, res: Response, next: NextFunction) => {
+    public login = (req: Request, res: Response, next: NextFunction) => {
         // Retrieve user data from auth local strategy.
         const userData: IUser = req.user;
 
@@ -77,7 +79,8 @@ export class UserController {
         // Set Cookie Header
         res.setHeader('Set-Cookie', [this.createCookie(token)]);
 
-        res.status(200).json({token});
+        // Send token
+        res.status(200).json(token);
     };
 
     private createCookie(token: IToken) {

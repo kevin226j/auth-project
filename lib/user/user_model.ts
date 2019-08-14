@@ -1,6 +1,7 @@
 import * as bcrypt from 'bcryptjs';
 import {Schema, Model, model} from 'mongoose';
-import {IUser, EType} from '../../interfaces';
+import {IUser} from '../../interfaces';
+import {Handler} from '../exception/handler';
 
 // tslint:disable: no-unsafe-any
 
@@ -73,7 +74,7 @@ userSchema.methods.isValidPassword = async function(enteredPassword: string) {
         // Verify if entered password matches the user's stored password.
         return await bcrypt.compare(enteredPassword, this.local.password);
     } catch (error) {
-        throw new Error(error);
+        throw new Handler().errorResponse(error.name, error.message);
     }
 };
 
