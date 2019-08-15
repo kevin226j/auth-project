@@ -1,26 +1,26 @@
-// tsconfig.json
 {
     "compilerOptions": {
         "module": "commonjs",
         "moduleResolution": "node",
         "pretty": true,
         "sourceMap": true,
-        "target": "es6",
+        "target": "es5",
         "outDir": "./dist",
         "baseUrl": "/",
         "jsx": "react",
         "noImplicitAny": true,
-        "typeRoots": ["./src/typings/*.d.ts"]
+        "typeRoots": [
+            "./node_modules/@types",
+            "./typings/**/*"
+        ],
+        "esModuleInterop": true
     },
     "include": [
-        "lib/**/*.ts",
-        "/src/typings",
-        "interfaces",
+        "./app/**/*",
+        "./typings/index.d.ts"
     ],
     "exclude": [
-        "node_modules",
-        "src/node_modules",
-        "dist",
-        "src/assets"
+        "./node_modules",
+        "./assets"
     ]
 }

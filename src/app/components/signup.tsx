@@ -1,4 +1,7 @@
 import * as React from 'react';
+
+const registerImage = require('../../assets/images/signup-image.jpg');
+
 /**
  * Sign Up Component.
  */
@@ -68,7 +71,7 @@ export class SignUp extends React.Component {
                         </div>
                         <div className="signup-image">
                             <figure>
-                                <img src="../../assets/images/signup-image.jpg" alt="sing up image" />
+                                <img src={String(registerImage)} alt="sing up image" />
                             </figure>
                             <a href="/" className="signup-image-link">
                                 I am already member

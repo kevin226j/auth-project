@@ -9,6 +9,7 @@ export const router: React.StatelessComponent = () => {
             <Switch>
                 <Route exact path="/" component={Login} />
                 <Route exact path="/signup" component={SignUp} />
+                <Route exact path="/*" component={() => <div> Not Found</div>} />
             </Switch>
         </React.Fragment>
     );

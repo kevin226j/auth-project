@@ -23,11 +23,11 @@ module.exports = {
 
     resolve: {
         // Add '.js', .ts', '.json', '.jsx', .tsx' as resolvable extensions.
-        extensions: ['.js', '.jsx', '.json', '.ts', '.tsx']
+        extensions: ['.js', '.jsx', '.json', '.ts', '.tsx', '.jpg', '.png', '.jpeg']
     },
     devServer: {
         historyApiFallback: true,
-        watchContentBase: true
+        watchContentBase: true,
     },
     module: {
         rules: [{
@@ -63,33 +63,14 @@ module.exports = {
             {
                 // All media files extension will be handled by 'file-loader', and 'image-webpack-loader'.
                 test: /\.(gif|png|jpe?g|svg)$/i,
-                use: [
-                    'file-loader',
-                    {
-                        loader: 'image-webpack-loader',
+                use: [{
+                        loader: 'file-loader',
                         options: {
-                            mozjpeg: {
-                                progressive: true,
-                                quality: 65
-                            },
-                            // optipng.enabled: false will disable optipng
-                            optipng: {
-                                enabled: false,
-                            },
-                            pngquant: {
-                                quality: '65-90',
-                                speed: 4
-                            },
-                            gifsicle: {
-                                interlaced: false,
-                            },
-                            // the webp option will enable WEBP
-                            webp: {
-                                quality: 75
-                            }
-                        }
-                    }
-                ]
+                            name: '[path][name]-[hash:8].[ext]'
+                        },
+                    },
+
+                ],
             },
             // All output '.js' files will have any sourcemaps re-processed by 'source-map-loader'.
             {

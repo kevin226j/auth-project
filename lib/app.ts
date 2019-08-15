@@ -43,7 +43,7 @@ export class App {
         this.app.use(express.static(path.resolve(__dirname, '..', 'dist', 'public')));
 
         // Serve production files.
-        this.app.get('/', (req: express.Request, res: express.Response) => {
+        this.app.get('/*', (req: express.Request, res: express.Response) => {
             res.sendFile(path.resolve(__dirname, '..', 'dist', 'public', 'index.html'));
         });
 

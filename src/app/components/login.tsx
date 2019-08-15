@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+const loginImage = require('../../assets/images/signin-image.jpg');
+
 /**
  * Sign Up Component.
  */
@@ -11,7 +13,7 @@ export class Login extends React.Component {
                     <div className="signin-content">
                         <div className="signin-image">
                             <figure>
-                                <img src="../../assets/images/signin-image.jpg" alt="sing up image" />
+                                <img src={String(loginImage)} alt="sing up image" />
                             </figure>
                             <a href="/signup" className="signup-image-link">
                                 Create an account
