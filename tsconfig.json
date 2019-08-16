@@ -10,12 +10,10 @@
         "baseUrl": "/",
         "jsx": "react",
         "noImplicitAny": true,
-        "typeRoots": ["./src/typings/*.d.ts"]
+        "esModuleInterop": false
     },
     "include": [
         "lib/**/*.ts",
-        "/src/typings",
-        "interfaces",
     ],
     "exclude": [
         "node_modules",

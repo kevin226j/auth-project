@@ -6,10 +6,13 @@ import * as mongoose from 'mongoose';
 import * as path from 'path';
 import * as cors from 'cors';
 import * as passport from 'passport';
-import * as session from 'express-session';
 import * as lusca from 'lusca';
+import * as session from 'express-session';
+import * as connectMongo from 'connect-mongo';
 
 import {Handler} from './exception/handler';
+
+const mongoStore = connectMongo(session);
 
 /**
  * Main application class to run server.
@@ -114,7 +117,14 @@ export class App {
         dotenv.config();
 
         // Session middleware.
-        this.app.use(session({resave: true, saveUninitialized: true, secret: process.env.SESSION_SECRET}));
+        this.app.use(
+            session({
+                resave: true,
+                store: new mongoStore({mongooseConnection: mongoose.connection}),
+                saveUninitialized: true,
+                secret: process.env.SESSION_SECRET,
+            })
+        );
 
         // Passport setup
         this.app.use(passport.initialize());
@@ -123,7 +133,6 @@ export class App {
 
         // Web app security middleware
         this.app.use(lusca.xframe('SAMEORIGIN'));
-
         this.app.use(lusca.xssProtection(true));
     }
 

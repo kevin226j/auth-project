@@ -14,5 +14,13 @@
         "no-require-imports": false,
         "no-var-requires": false,
         "variable-name": [true, "allow-leading-underscore"]
+    },
+    "rulesDirectory": [],
+    "linterOptions": {
+        "exclude": [
+            "/src/",
+            "/dist/**/*.js",
+            "/node_modules/**/*.ts"
+        ]
     }
 }

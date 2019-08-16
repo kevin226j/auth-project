@@ -56,7 +56,8 @@ export class Login extends React.Component {
                                         name="signin"
                                         id="signin"
                                         className="form-submit"
-                                        defaultValue="Log in">
+                                        defaultValue="Log in"
+                                    >
                                         Login
                                     </button>
                                 </div>

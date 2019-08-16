@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {BrowserRouter as ReactDOMRouter} from 'react-router-dom';
-
 import {router as Router} from './router';
 
 /**
