@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {AuthService} from '../../services/auth_service';
+import {debounce} from '../../helpers/debounce';
 
 const loginImage = require('../../assets/images/signin-image.jpg');
 

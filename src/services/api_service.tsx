@@ -5,11 +5,13 @@ import * as axios from 'axios';
  * @param action method of http request
  * @param data  payload
  */
-export const apiService = (url: string, action: string, data: any) => {
+export const apiService = (urlEndpoint: string, action: string, data: any, headers: any = null) => {
+    const domain = process.env.DOMAIN || 'http://localhost:3000';
+
     switch (action.toLowerCase()) {
         case 'get':
             return axios.default
-                .get(url, {withCredentials: false})
+                .get(`${domain}/${urlEndpoint}`, {withCredentials: false, headers})
                 .then(
                     res => {
                         return res.data;
@@ -23,7 +25,7 @@ export const apiService = (url: string, action: string, data: any) => {
                 });
         case 'post':
             return axios.default
-                .post(url, data, {withCredentials: false})
+                .post(`${domain}/${urlEndpoint}`, data, {withCredentials: false, headers})
                 .then(
                     res => {
                         return res.data;
@@ -37,7 +39,7 @@ export const apiService = (url: string, action: string, data: any) => {
                 });
         case 'put':
             return axios.default
-                .put(url, data, {withCredentials: false})
+                .put(`${domain}/${urlEndpoint}`, data, {withCredentials: false, headers})
                 .then(
                     res => {
                         return res.data;
@@ -52,7 +54,7 @@ export const apiService = (url: string, action: string, data: any) => {
 
         case 'delete':
             return axios.default
-                .delete(url, {withCredentials: false})
+                .delete(`${domain}/${urlEndpoint}`, {withCredentials: false, headers})
                 .then(
                     res => {
                         return res.data;

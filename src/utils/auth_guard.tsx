@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {AuthService} from '../services/auth_service';
 
-// function that accepts react components to be authenticated.
+// HOC function that accepts react components to be authenticated.
 export const authGuard = (Component: typeof React.Component) => {
     const auth = new AuthService();
 
@@ -22,7 +22,6 @@ export const authGuard = (Component: typeof React.Component) => {
                 try {
                     // Get token from local storage and decode, then set user state.
                     const profile = auth.getProfile();
-                    console.log('profile', profile);
                     this.setState({
                         user: profile,
                     });

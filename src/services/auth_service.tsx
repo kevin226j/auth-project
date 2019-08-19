@@ -2,10 +2,10 @@ import decode from 'jwt-decode';
 import {apiService} from './api_service';
 
 export class AuthService {
-    public domain: string;
+    public endpoint: string;
 
-    constructor(domain?: string) {
-        this.domain = domain || 'http://localhost:3000/api/users';
+    constructor(endpoint?: string) {
+        this.endpoint = endpoint || 'api/users';
         this.login = this.login.bind(this);
         this.getProfile = this.getProfile.bind(this);
     }
@@ -17,8 +17,7 @@ export class AuthService {
      */
     public login = (email: string, password: string) => {
         // Api call to server to retrieve token.
-        return apiService(`${this.domain}/login`, 'post', {email, password}).then((res: any) => {
-            console.log(res);
+        return apiService(`${this.endpoint}/login`, 'post', {email, password}).then((res: any) => {
             if ([400, 401, 403].indexOf(res.status) !== -1) {
                 return Promise.reject(res.data);
             }
@@ -43,7 +42,7 @@ export class AuthService {
         return decode(this.getToken());
     }
 
-    private getToken() {
+    public getToken() {
         // Retrieve user token from localStorage.
         return localStorage.getItem('token');
     }
