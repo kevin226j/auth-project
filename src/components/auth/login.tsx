@@ -1,11 +1,67 @@
 import * as React from 'react';
+import {AuthService} from '../../services/auth_service';
 
 const loginImage = require('../../assets/images/signin-image.jpg');
+
+interface ILogin {
+    username: string;
+    password: string;
+}
 
 /**
  * Sign Up Component.
  */
-export class Login extends React.Component {
+export class Login extends React.Component<{}, ILogin> {
+    private authService: AuthService;
+
+    constructor(props: any) {
+        super(props);
+        this.state = {
+            username: '',
+            password: '',
+        };
+        this.handleChange = this.handleChange.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
+        this.authService = new AuthService();
+    }
+
+    public handleChange = (e: React.SyntheticEvent<HTMLInputElement>): void => {
+        this.setState({
+            ...this.state,
+            [e.currentTarget.name]: e.currentTarget.value,
+        });
+        console.log(this.state);
+    };
+
+    public onSubmit = (e: any): void => {
+        e.preventDefault();
+        console.log(this.state);
+
+        const payload = {
+            email: this.state.username,
+            password: this.state.password,
+        };
+
+        // Make API call to server after validation is complete.
+        this.authService
+            .login(this.state.username, this.state.password)
+            .then((res: any) => {
+                window.location.replace('/home');
+            })
+            .catch((err: any) => {
+                console.log(err);
+                alert('Invalid Credentials, please try again');
+                window.location.reload();
+            });
+    };
+
+    componentWillMount = () => {
+        if (this.authService.loggedIn()) {
+            // If user is already logged in, send them to home page.
+            window.location.replace('/home');
+        }
+    };
+
     public render() {
         return (
             <section className="sign-in">
@@ -26,29 +82,25 @@ export class Login extends React.Component {
                                     <label htmlFor="your_name">
                                         <i className="zmdi zmdi-account material-icons-name" />
                                     </label>
-                                    <input type="text" name="your_name" id="your_name" placeholder="Your Name" />
+                                    <input
+                                        type="text"
+                                        name="username"
+                                        className="username"
+                                        placeholder="Username"
+                                        onChange={this.handleChange}
+                                    />
                                 </div>
                                 <div className="form-group">
-                                    <label htmlFor="your_pass">
+                                    <label htmlFor="password">
                                         <i className="zmdi zmdi-lock" />
                                     </label>
-                                    <input type="password" name="your_pass" id="your_pass" placeholder="Password" />
-                                </div>
-                                <div className="form-group">
-                                    {/* tslint:disable-next-line: react-a11y-input-elements */}
                                     <input
-                                        type="checkbox"
-                                        name="remember-me"
-                                        id="remember-me"
-                                        className="agree-term"
-                                        aria-checked="false"
+                                        type="password"
+                                        name="password"
+                                        className="password"
+                                        placeholder="Password"
+                                        onChange={this.handleChange}
                                     />
-                                    <label htmlFor="remember-me" className="label-agree-term">
-                                        <span>
-                                            <span />
-                                        </span>
-                                        Remember me
-                                    </label>
                                 </div>
                                 <div className="form-group form-button">
                                     <button
@@ -57,6 +109,7 @@ export class Login extends React.Component {
                                         id="signin"
                                         className="form-submit"
                                         defaultValue="Log in"
+                                        onClick={this.onSubmit}
                                     >
                                         Login
                                     </button>

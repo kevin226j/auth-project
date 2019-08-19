@@ -108,6 +108,15 @@ export class App {
 
         // Support for CORS.
         this.app.use(cors());
+        this.app.use((req, res, next) => {
+            res.header('Access-Control-Allow-Origin', '*');
+            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+            res.header(
+                'Access-Control-Allow-Headers',
+                'Origin, X-Requested-With, Content-Type, Accept, Cookie, x-access-token, Authorization'
+            );
+            next();
+        });
 
         // Create app server.
         this.server = http.createServer(this.app);
