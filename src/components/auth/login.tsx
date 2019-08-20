@@ -1,10 +1,12 @@
 import * as React from 'react';
 import {AuthService} from '../../services/auth_service';
 import {debounce} from '../../helpers/debounce';
+import {ILogin} from '../../interfaces';
+import {Input} from '../form/input';
 
 const loginImage = require('../../assets/images/signin-image.jpg');
 
-interface ILogin {
+interface ILoginError {
     username: string;
     password: string;
 }
@@ -14,6 +16,8 @@ interface ILogin {
  */
 export class Login extends React.Component<{}, ILogin> {
     private authService: AuthService;
+    private socialLoginIcons: string[];
+    private loginError: ILoginError;
 
     constructor(props: any) {
         super(props);
@@ -21,27 +25,47 @@ export class Login extends React.Component<{}, ILogin> {
             username: '',
             password: '',
         };
-        this.handleChange = this.handleChange.bind(this);
+        this.loginError = {username: '', password: ''};
+        this.socialLoginIcons = ['google', 'twitter', 'facebook'];
+        this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
         this.authService = new AuthService();
     }
 
-    public handleChange = (e: React.SyntheticEvent<HTMLInputElement>): void => {
-        this.setState({
+    /**
+     * @param fieldName
+     * @param fieldValue
+     */
+    public onChange = (fieldName: string, fieldValue: any) => {
+        const nextState = {
             ...this.state,
-            [e.currentTarget.name]: e.currentTarget.value,
-        });
-        console.log(this.state);
+            [fieldName]: fieldValue,
+        };
+        this.setState(nextState, () => console.log(this.state));
+
+        switch (fieldName) {
+            case 'username':
+                if (fieldValue.length < 3) {
+                    this.loginError.username = 'Username must have a length of 3.';
+                } else {
+                    this.loginError.username = '';
+                }
+                break;
+            case 'password':
+                if (fieldValue.length < 3) {
+                    this.loginError.password = 'Password must have a length of 3.';
+                } else {
+                    this.loginError.password = '';
+                }
+                break;
+        }
     };
 
+    /**
+     * @param e
+     */
     public onSubmit = (e: any): void => {
         e.preventDefault();
-        console.log(this.state);
-
-        const payload = {
-            email: this.state.username,
-            password: this.state.password,
-        };
 
         // Make API call to server after validation is complete.
         this.authService
@@ -56,10 +80,15 @@ export class Login extends React.Component<{}, ILogin> {
             });
     };
 
-    componentWillMount = () => {
+    /**
+     * Component will mount lifecycle to check and redirect if user is logged in.
+     */
+    public componentWillMount = () => {
         if (this.authService.loggedIn()) {
             // If user is already logged in, send them to home page.
             window.location.replace('/home');
+        } else {
+            this.authService.logout();
         }
     };
 
@@ -79,30 +108,28 @@ export class Login extends React.Component<{}, ILogin> {
                         <div className="signin-form">
                             <h2 className="form-title">Sign In</h2>
                             <form method="POST" className="register-form" id="login-form">
-                                <div className="form-group">
-                                    <label htmlFor="your_name">
-                                        <i className="zmdi zmdi-account material-icons-name" />
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="username"
-                                        className="username"
-                                        placeholder="Username"
-                                        onChange={this.handleChange}
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="password">
-                                        <i className="zmdi zmdi-lock" />
-                                    </label>
-                                    <input
-                                        type="password"
-                                        name="password"
-                                        className="password"
-                                        placeholder="Password"
-                                        onChange={this.handleChange}
-                                    />
-                                </div>
+                                {/* Test Input component */}
+                                <Input
+                                    name="username"
+                                    type="text"
+                                    className="username"
+                                    icon="zmdi zmdi-account material-icons-name"
+                                    placeHolder="Username"
+                                    label="Username"
+                                    onChange={this.onChange}
+                                    error={this.loginError.username}
+                                />
+                                <Input
+                                    name="password"
+                                    type="password"
+                                    className="password"
+                                    icon="zmdi zmdi-lock"
+                                    placeHolder="Password"
+                                    label="Password"
+                                    onChange={this.onChange}
+                                    error={this.loginError.password}
+                                />
+
                                 <div className="form-group form-button">
                                     <button
                                         type="submit"
@@ -119,23 +146,15 @@ export class Login extends React.Component<{}, ILogin> {
                             <div className="social-login">
                                 <span className="social-label">Or login with</span>
                                 <ul className="socials">
-                                    <li>
-                                        <a href="/facebooklogin">
-                                            <i className="display-flex-center zmdi zmdi-facebook" />
-                                        </a>
-                                    </li>
-                                    <li>
-                                        {/* tslint:disable-next-line: react-a11y-anchors */}
-                                        <a href="twitterlogin">
-                                            <i className="display-flex-center zmdi zmdi-twitter" />
-                                        </a>
-                                    </li>
-                                    <li>
-                                        {/* tslint:disable-next-line: react-a11y-anchors */}
-                                        <a href="/googlelogin">
-                                            <i className="display-flex-center zmdi zmdi-google" />
-                                        </a>
-                                    </li>
+                                    {this.socialLoginIcons.map((icon, index) => {
+                                        return (
+                                            <li key={index}>
+                                                <a href={`/${icon}/login`}>
+                                                    <i className={`display-flex-center zmdi zmdi-${icon}`} />
+                                                </a>
+                                            </li>
+                                        );
+                                    })}
                                 </ul>
                             </div>
                         </div>

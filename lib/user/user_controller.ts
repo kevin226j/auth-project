@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 import * as bcrypt from 'bcryptjs';
 import {Request, Response, NextFunction} from 'express';
 import {userModel as User} from './user_model';
-import {IUser, IToken} from '../../interfaces';
+import {IUser, IToken} from '../interfaces';
 import {Handler} from '../exception/handler';
 
 dotenv.config();

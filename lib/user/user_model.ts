@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcryptjs';
 import {Schema, Model, model} from 'mongoose';
-import {IUser} from '../../interfaces';
+import {IUser} from '../interfaces';
 import {Handler} from '../exception/handler';
 
 // tslint:disable: no-unsafe-any
