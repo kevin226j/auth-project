@@ -7,6 +7,7 @@ import {Passport} from '../config/passport';
 
 /**
  * User Route class.
+ * endpoint : /users/
  */
 export class UserRoutes {
     public router: Router;
@@ -20,7 +21,11 @@ export class UserRoutes {
         this.init();
     }
 
+    /**
+     * Method initializes routes using userController, passport, and userService as handlers.
+     */
     public init() {
+        // Flow begins first by authenticaing request body using joi validation model.
         this.router
             .route('/login')
             .post(validateModel(userValidation.model), this.userService.authLocal, this.userController.login);

@@ -3,9 +3,13 @@ import {Handler} from '../exception/handler';
 
 // tslint:disable: no-unsafe-any
 
-// Validate request body.
+/**
+ * Validate request body from http client.
+ * @param schema - joi schema object
+ */
 export const validateModel = (schema: joi.ObjectSchema) => {
     return (req: any, res: any, next: any) => {
+        // validate using specified validation schema and request body.
         const result = joi.validate(req.body, schema);
 
         if (result.error) {

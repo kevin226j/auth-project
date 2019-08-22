@@ -1,3 +1,6 @@
+/**
+ * Interface for input props.
+ */
 export interface IInputProps {
     name: string;
     type: string;
@@ -8,7 +11,6 @@ export interface IInputProps {
     error?: string;
     icon?: string;
     id?: string;
-
     errors?: string;
 
     onChange: (fieldName: string, fieldValue: any) => void;

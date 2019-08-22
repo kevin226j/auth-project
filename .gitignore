@@ -6,6 +6,11 @@
 /out-tsc
 /build
 /dist
+/.vscode
+.prettierrc
+.nodemon.json
+tslint.json
+
 
 
 # dependencies

@@ -1,5 +1,8 @@
 import {Document} from 'mongoose';
 
+/**
+ * enum for method of Login
+ */
 export enum EType {
     'local',
     'google',
@@ -7,12 +10,18 @@ export enum EType {
     'twitter',
 }
 
+/**
+ * Interface for Local Login
+ */
 interface ILocalLogin {
     name: string;
     email: string;
     password: string;
 }
 
+/**
+ * Interface for Google Login
+ */
 interface IGoogleLogin {
     id?: string;
     token: string;
@@ -20,6 +29,9 @@ interface IGoogleLogin {
     name: string;
 }
 
+/**
+ * Interface for Facebook Login
+ */
 interface IFacebookLogin {
     id?: string;
     token: string;
@@ -27,6 +39,9 @@ interface IFacebookLogin {
     name: string;
 }
 
+/**
+ * Interface for Twitter Login
+ */
 interface ITwitterLogin {
     id?: string;
     token: string;
@@ -34,6 +49,9 @@ interface ITwitterLogin {
     name: string;
 }
 
+/**
+ * Interface for User
+ */
 export interface IUser extends Document {
     [x: string]: any;
     method: EType;

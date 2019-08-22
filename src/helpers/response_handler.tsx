@@ -1,4 +1,7 @@
-// Handle API Responses
+/**
+ * API Response Handler
+ * @param response - Response Object
+ */
 export const responseHandler = (response: any) => {
     const status = response.status;
 

@@ -13,17 +13,22 @@ dotenv.config();
 // tslint:disable: no-unsafe-any
 
 /**
- * Passport configuration class
+ * Passport configuration class.
  */
 export class Passport {
     private readonly localStrategy: LocalStrategy = new LocalStrategy();
     private readonly jwtStrategy: JWTStrategy = new JWTStrategy();
 
+    /**
+     * Method initializes Passport when called.
+     */
     public init = (): void => {
+        // determine which data in user object should be stored in session.
         passport.serializeUser<any, any>((user, done) => {
             done(undefined, user._id);
         });
 
+        // Retrieve id from key specified in serializeUser.
         passport.deserializeUser((id, done) => {
             User.findById(id, (err, user) => {
                 done(err, user);
@@ -33,6 +38,9 @@ export class Passport {
         this.loadStrategies();
     };
 
+    /**
+     * Load strategies onto Passport.
+     */
     public loadStrategies = (): void => {
         try {
             // Add strategies here.
@@ -44,6 +52,12 @@ export class Passport {
         }
     };
 
+    /**
+     * Method checks if user signing in is authenticated.
+     * @req - request
+     * @res - response
+     * @next - next
+     */
     public isAuthenticated = (req: Request, res: Response, next: NextFunction): any => {
         if (req.isAuthenticated()) {
             return next();
@@ -51,6 +65,12 @@ export class Passport {
         res.status(401).send(new Handler().errorResponse('Invalid Username and/or Password'));
     };
 
+    /**
+     * Method checks if user signing in is authorized. Used for third-party api authentication.
+     * @req - request
+     * @res - response
+     * @next - next
+     */
     public isAuthorized = (req: Request, res: Response, next: NextFunction): any => {
         const provider = req.path.split('/').slice(-1)[0];
         const token = req.user.token;

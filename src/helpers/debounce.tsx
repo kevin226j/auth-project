@@ -1,4 +1,6 @@
-// Debouncer function, simple implementation.
+/**
+ *  Simple implementation of debounce function.
+ */
 export const debounce = (fn: any, delay: number) => {
     let timer: any = null;
     return function() {

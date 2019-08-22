@@ -1,11 +1,16 @@
 import * as React from 'react';
-import {IFormProperties} from './interfaces/IFormProperties';
+import {IFormProps} from './interfaces/IFormProps';
 
-export const Form: React.StatelessComponent<IFormProperties> = props => {
+/**
+ * Form component that includes IFormProps interface to props.
+ * @param props - extends to IFormProps
+ */
+export const Form: React.StatelessComponent<IFormProps> = props => {
     return (
         <div className={props.formClassName}>
             <h2 className="form-title">{props.title}</h2>
             <form className={props.className} id={props.id}>
+                {/* Pass children components into form here */}
                 {props.children}
             </form>
         </div>

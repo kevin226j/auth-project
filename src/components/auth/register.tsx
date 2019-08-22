@@ -1,40 +1,33 @@
 import * as React from 'react';
-import {Input} from '../form/input';
-import {apiService} from '../../services/api_service';
-import {AuthService} from '../../services/auth_service';
+import {apiService, AuthService} from '../../services/';
 import {responseHandler} from '../../helpers/response_handler';
-import {CheckBox} from '../form/checkbox';
-import {Button} from '../form/button';
-import {Form} from '../form/form';
-import {required, isEmail, minLength, matchPasswords} from '../../validators';
+import {CheckBox, Button, Form, Input} from '../form/';
+import {required, isEmail, minLength, matchPasswords} from '../../utils/validators';
+import {IRegister, IError} from './interfaces';
 
+/**
+ * Load image from assets
+ */
 const registerImage = require('../../assets/images/signup-image.jpg');
 
-interface IRegisterInputValues {
-    name: string;
-    email: string;
-    isChecked: boolean;
-    password: string;
-    confirmPassword: string;
-}
-
-interface IError {
-    [key: string]: string;
-}
-
+/**
+ * Interface for state of Register Component.
+ */
 interface ISignUpState {
-    values: IRegisterInputValues;
+    values: IRegister;
     errors: IError;
 }
 
 /**
- * Sign Up Component.
+ * Register Component. Class/State component.
  */
 export class Register extends React.Component<{}, ISignUpState> {
     private authService: AuthService;
 
     constructor(props: any) {
         super(props);
+
+        // Set initial state
         this.state = {
             values: {
                 name: '',
@@ -51,12 +44,20 @@ export class Register extends React.Component<{}, ISignUpState> {
             },
         };
 
+        // Initialize
+        this.authService = new AuthService();
+
+        // Bind methods
         this.onChange = this.onChange.bind(this);
         this.onCheck = this.onCheck.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
-        this.authService = new AuthService();
     }
 
+    /**
+     * Method to bind event from Input component to parent when element is being typed.
+     * @param fieldName - element name
+     * @param fieldValue - element value
+     */
     public onChange = (fieldName: string, fieldValue: string) => {
         const nextState = {
             ...this.state,
@@ -65,12 +66,17 @@ export class Register extends React.Component<{}, ISignUpState> {
                 [fieldName]: fieldValue,
             },
         };
+        // Validate as user is typing in input fields.
         this.validate(fieldName, fieldValue);
+
         this.setState(nextState);
     };
 
+    /**
+     * Method used to change state of checkbox element.
+     * @param fieldValue - element value
+     */
     public onCheck = (fieldValue: boolean) => {
-        console.log('is checked clicked');
         const nextState = {
             values: {
                 ...this.state.values,
@@ -80,8 +86,12 @@ export class Register extends React.Component<{}, ISignUpState> {
         this.setState(nextState);
     };
 
+    /**
+     * Validate input based on element name. Simple validation.
+     * @param fieldName - element name
+     * @param fieldValue - element value
+     */
     public validate = (fieldName: string, fieldValue: string) => {
-        console.log(fieldName, fieldValue);
         switch (fieldName) {
             case 'name':
                 this.state.errors.name = !required(fieldValue) ? 'Field Required' : '';
@@ -110,6 +120,10 @@ export class Register extends React.Component<{}, ISignUpState> {
         }
     };
 
+    /**
+     * Method to check if form inputs are valid. Will check for any error messages and make sure no fields are empty.
+     * @returns boolean
+     */
     private isFormValid = (): boolean => {
         let isValid = true;
 
@@ -126,24 +140,27 @@ export class Register extends React.Component<{}, ISignUpState> {
         return isValid;
     };
 
+    /**
+     * Method that submits form.
+     */
     public onSubmit = () => {
-        console.log(this.state);
-        console.log(this.isFormValid());
-
+        // Validate form before calling api.
         if (this.isFormValid()) {
             if (!this.state.values.isChecked) {
+                // If checkbox is not check throw an alert
                 alert('Must agree before registering.');
             } else {
+                // construct payload for server.
                 const {name, email, password} = this.state.values;
                 const payload = {
                     name,
                     email,
                     password,
                 };
+                // Make API call to server after validation is complete.
                 apiService('api/users/register', 'post', payload)
-                    .then(responseHandler)
+                    .then(res => responseHandler(res))
                     .then((res: any) => {
-                        console.log(res);
                         this.authService.setToken(res.token);
                         window.location.replace('/home');
                     });
@@ -153,10 +170,15 @@ export class Register extends React.Component<{}, ISignUpState> {
             for (let [state, val] of Object.entries(this.state.values)) {
                 this.validate(state, val);
             }
+
+            // Invoke state to display error messages.
             this.setState(prevState => ({...prevState}));
         }
     };
 
+    /**
+     * Component will mount lifecycle to check and redirect if user is logged in.
+     */
     public componentWillMount() {
         if (this.authService.loggedIn()) {
             // If user is already logged in, send them to home page.

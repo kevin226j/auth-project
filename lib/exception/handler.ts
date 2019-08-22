@@ -6,7 +6,10 @@ import {NextFunction, Request, Response} from 'express';
  * Define error and exception handlers
  */
 export class Handler {
-    // Handles all not found routes
+    /**
+     * Method handles all not found routes
+     * @_express - include express app
+     */
     public notFoundHandler = (_express: any): any => {
         _express.use('*', (req: Request, res: Response, next: NextFunction) => {
             const apiPrefix = 'api';
@@ -22,7 +25,13 @@ export class Handler {
         });
     };
 
-    // Handles routes errors/exceptions
+    /**
+     * Method handles routes errors/exceptions
+     * @param err - Error response object
+     * @param req - request
+     * @param res - response
+     * @param next - next
+     */
     public clientErrorHandler = (err: Error, req: Request, res: Response, next: NextFunction): any => {
         if (req.xhr) {
             return res.status(500).send('Something went wrong.');
@@ -31,6 +40,11 @@ export class Handler {
         }
     };
 
+    /**
+     * Method handles error response.
+     * @param message - error message
+     * @param srr - error response
+     */
     public errorResponse = (message: string, err?: any) => {
         return {
             error: {

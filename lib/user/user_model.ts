@@ -5,7 +5,9 @@ import {Handler} from '../exception/handler';
 
 // tslint:disable: no-unsafe-any
 
-// Mongoose User Schema
+/**
+ * Mongoose User Schema. Validation will be used by JOI npm
+ */
 const userSchema: Schema = new Schema(
     {
         method: {
@@ -73,7 +75,9 @@ const userSchema: Schema = new Schema(
     }
 );
 
-// Add method to User Schema to check if passwords match, return true if passwords match.
+/**
+ * Add method to User Schema to check if passwords match, return true if passwords match.
+ */
 userSchema.methods.isValidPassword = async function(enteredPassword: string) {
     try {
         // Verify if entered password matches the user's stored password.

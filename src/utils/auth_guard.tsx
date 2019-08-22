@@ -1,19 +1,29 @@
 import * as React from 'react';
 import {AuthService} from '../services/auth_service';
 
-// HOC function that accepts react components to be authenticated.
+/**
+ * HOC function that accepts React components to be authenticated.
+ * @param Component - React Based component
+ */
 export const authGuard = (Component: typeof React.Component) => {
     const auth = new AuthService();
 
-    // Wrapper for guarded components
+    /**
+     * Wrapper class for guarded components
+     */
     return class AuthGuard extends React.Component<{}, any> {
         constructor(props: any) {
             super(props);
+
+            // Initial states
             this.state = {
                 user: null,
             };
         }
 
+        /**
+         * Lifecycle hook. Before component mounts, check to see if user is already logged in or not.
+         */
         public componentWillMount() {
             // If user is not logged in redirect to the login page.
             if (!auth.loggedIn()) {
@@ -33,6 +43,9 @@ export const authGuard = (Component: typeof React.Component) => {
             }
         }
 
+        /**
+         * Render component that has been authenticated/logged in.
+         */
         public render = () => {
             if (this.state.user) {
                 return <Component history={window.history} user={this.state.user} />;

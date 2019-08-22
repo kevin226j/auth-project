@@ -5,17 +5,12 @@ import {Request, Response, NextFunction} from 'express';
 import {userModel as User} from './user_model';
 import {IUser, IToken} from '../interfaces';
 import {Handler} from '../exception/handler';
+import {IUserData} from '../interfaces/IUserData';
 
 dotenv.config();
 
 // tslint:disable: max-classes-per-file
 // tslint:disable: no-unsafe-any
-
-export interface IUserData {
-    name: string;
-    email: string;
-    password: string;
-}
 
 /**
  * Controller used to register and login users.
@@ -24,6 +19,12 @@ export class UserController {
     public _util = new UserUtil();
     public user: any = User;
 
+    /**
+     * Method used to register users.
+     * @param req - request
+     * @param res - response
+     * @param next - next
+     */
     public registration = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const userData: IUserData = req.body;
@@ -69,6 +70,12 @@ export class UserController {
         }
     };
 
+    /**
+     * Method used to login users.
+     * @param req - request
+     * @param res - response
+     * @param next - next
+     */
     public login = (req: Request, res: Response, next: NextFunction) => {
         // Retrieve user data from auth local strategy.
         const userData: IUser = req.user;
@@ -83,6 +90,10 @@ export class UserController {
         res.status(200).json(token);
     };
 
+    /**
+     * Method used to create cookie for session.
+     * @param token - token
+     */
     private createCookie(token: IToken) {
         return `Authorization=${token.token}; HttpOnly; Max-Age=${token.expiresIn}`;
     }
@@ -92,6 +103,11 @@ export class UserController {
  * This is the User utility class to sign tokens.
  */
 class UserUtil {
+    /**
+     * Method signs and returns token
+     * @param user - token based user
+     * @returns token: IToken
+     */
     public signToken(user: any): IToken {
         return {
             token: jwt.sign(

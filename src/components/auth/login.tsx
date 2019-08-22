@@ -1,31 +1,25 @@
 import * as React from 'react';
 import {AuthService} from '../../services/auth_service';
-import {debounce} from '../../helpers/debounce';
-import {ILogin} from '../../interfaces';
-import {Input} from '../form/input';
-import {required, maxLength, isEmail, minLength} from '../../validators';
-import useForm from 'react-hook-form';
-import SimpleReactValidator from 'simple-react-validator';
-import {Form} from '../form/form';
-import {Button} from '../form/button';
+import {ILogin, IError} from './interfaces';
+import {Input, Form, Button} from '../form';
+import {required, isEmail} from '../../utils/validators';
+import {responseHandler} from '../../helpers/response_handler';
 
+/**
+ * Load image from assets
+ */
 const loginImage = require('../../assets/images/signin-image.jpg');
 
-interface IError {
-    [key: string]: string;
-}
-
-interface ILoginValues {
-    username: string;
-    password: string;
-}
-
+/**
+ * Interface for state of Login Component.
+ */
 interface ILoginState {
-    values: ILoginValues;
+    values: ILogin;
     errors: IError;
 }
+
 /**
- * Sign Up Component.
+ * Login Component. Class/State component.
  */
 export class Login extends React.Component<{}, ILoginState> {
     private authService: AuthService;
@@ -33,6 +27,8 @@ export class Login extends React.Component<{}, ILoginState> {
 
     constructor(props: any) {
         super(props);
+
+        // Set initial state
         this.state = {
             values: {
                 username: '',
@@ -43,17 +39,23 @@ export class Login extends React.Component<{}, ILoginState> {
                 password: '',
             },
         };
+
+        // Initialize
         this.socialLoginIcons = ['google', 'twitter', 'facebook'];
+        this.authService = new AuthService();
+
+        // Bind methods
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
-        this.authService = new AuthService();
     }
 
     /**
-     * @param fieldName
-     * @param fieldValue
+     * Method to bind event from Input component to parent when element is being typed.
+     * @param fieldName - element name
+     * @param fieldValue - element value
      */
     public onChange = (fieldName: string, fieldValue: string) => {
+        // Set next state
         const nextState = {
             ...this.state,
             values: {
@@ -62,10 +64,17 @@ export class Login extends React.Component<{}, ILoginState> {
             },
         };
 
+        // Validate as user is typing in input fields.
         this.validate(fieldName, fieldValue);
+
         this.setState(nextState);
     };
 
+    /**
+     * Validate input based on element name. Basic validation.
+     * @param fieldName - element name
+     * @param fieldValue - element value
+     */
     public validate = (fieldName: string, fieldValue: string) => {
         switch (fieldName) {
             case 'username':
@@ -81,6 +90,10 @@ export class Login extends React.Component<{}, ILoginState> {
         }
     };
 
+    /**
+     * Method to check if form inputs are valid. Will check for any error messages and make sure no fields are empty.
+     * @returns boolean
+     */
     private isFormValid = (): boolean => {
         let isValid = true;
 
@@ -98,28 +111,34 @@ export class Login extends React.Component<{}, ILoginState> {
     };
 
     /**
-     * @param e
+     * Method that submits form.
      */
     public onSubmit = (): void => {
-        console.log(this.state);
-
         if (this.isFormValid()) {
             // Make API call to server after validation is complete.
             this.authService
                 .login(this.state.values.username, this.state.values.password)
+                // Filter response.
+                .then(res => responseHandler(res))
+
+                //Handle response.
                 .then((_res: any) => {
+                    // Redirect user to Homepage
                     window.location.replace('/home');
                 })
                 .catch((err: any) => {
-                    console.log(err);
                     alert('Invalid Credentials, please try again');
+
+                    // reload current Login page if login is unsucceessful
                     window.location.reload();
                 });
         } else {
-            // Validate fields if Form is not valid.
+            // Validate fields if current form is not valid.
             for (let [state, val] of Object.entries(this.state.values)) {
                 this.validate(state, val);
             }
+
+            // Invoke state to display error messages.
             this.setState(prevState => ({...prevState}));
         }
     };

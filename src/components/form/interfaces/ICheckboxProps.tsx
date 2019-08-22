@@ -1,3 +1,6 @@
+/**
+ * Interface for checkbox props
+ */
 export interface ICheckboxProps {
     name: string;
     checked: boolean;

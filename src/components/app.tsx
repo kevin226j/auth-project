@@ -3,7 +3,7 @@ import {BrowserRouter as ReactDOMRouter} from 'react-router-dom';
 import {router as Router} from './router';
 
 /**
- * App Class.
+ * Main React App component that renders Router component.
  */
 export class App extends React.Component {
     public render() {

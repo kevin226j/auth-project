@@ -1,6 +1,10 @@
 import * as React from 'react';
 import {ICheckboxProps} from './interfaces/ICheckboxProps';
 
+/**
+ * Checkbox component that includes ICheckboxProps interface to props.
+ * @param props - extends to ICheckboxProps
+ */
 export const CheckBox: React.StatelessComponent<ICheckboxProps> = props => {
     return (
         <React.Fragment>
@@ -25,6 +29,11 @@ export const CheckBox: React.StatelessComponent<ICheckboxProps> = props => {
     );
 };
 
+/**
+ * Function that used to pass parent Event function to child Event function using props.
+ * Event looks for checked node
+ * @param props
+ */
 const onCheck = (props: ICheckboxProps) => (e: React.ChangeEvent<HTMLInputElement>) => {
     props.onCheck(e.target.checked);
 };

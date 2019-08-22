@@ -39,7 +39,7 @@ export class App {
     }
 
     /**
-     * @returns Nothing. Method starts application.
+     * Method starts application.
      */
     public start(): void {
         // Serve client files from 'dist' folder.
@@ -61,6 +61,7 @@ export class App {
     }
 
     /**
+     * Method adds routes to application.
      * @param routeURL Route url endpoint.
      * @param routeHandler Route handler class for endpoint.
      */
@@ -73,7 +74,7 @@ export class App {
     }
 
     /**
-     * @returns Nothing. Method sets up database configuration.
+     * Method sets up database configuration.
      */
     private connectToDatabase(): void {
         // tslint:disable-next-line: prefer-type-cast
@@ -97,7 +98,7 @@ export class App {
     }
 
     /**
-     * @returns Nothing. Method sets up app configuration.
+     * Method sets up app configuration.
      */
     private configureApp(): void {
         // Support for application/json
@@ -146,7 +147,7 @@ export class App {
     }
 
     /**
-     * @returns Nothing. Method initializes error handling service.
+     * Method initializes error handling service.
      */
     private initializeErrorHandling() {
         // Server errors

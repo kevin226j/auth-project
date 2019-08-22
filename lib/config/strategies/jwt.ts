@@ -9,9 +9,13 @@ const jwtStrategy = passportJWT.Strategy;
 // tslint:disable: no-unsafe-any
 
 /**
- * Passport JWT Strategy
+ * Passport JWT Strategy class for passport.ts
  */
 export class JWT {
+    /**
+     * Method inializes strategy.
+     * @param _passport - include passport config.
+     */
     public init = (_passport: any) => {
         _passport.use(
             new jwtStrategy(

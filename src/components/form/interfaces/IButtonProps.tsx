@@ -1,3 +1,6 @@
+/**
+ * Interface for button props
+ */
 export interface IButtonProps {
     id: string;
     name: string;

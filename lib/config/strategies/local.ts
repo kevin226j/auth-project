@@ -7,9 +7,13 @@ const localStrategy = passportLocal.Strategy;
 // tslint:disable: no-unsafe-any
 
 /**
- * Passport Local Strategy
+ * Passport Local Strategy class for passport.ts
  */
 export class Local {
+    /**
+     * Method inializes strategy.
+     * @param _passport - include passport config.
+     */
     public init = (_passport: any) => {
         _passport.use(
             new localStrategy(
