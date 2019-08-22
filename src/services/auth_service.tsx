@@ -57,7 +57,7 @@ export class AuthService {
         }
     };
 
-    private setToken(token: string) {
+    public setToken(token: string) {
         // Saves token to localStorage.
         localStorage.setItem('token', token);
     }

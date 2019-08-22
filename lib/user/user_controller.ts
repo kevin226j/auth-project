@@ -62,7 +62,7 @@ export class UserController {
                 // Set Cookie Header
                 res.setHeader('Set-Cookie', [this.createCookie(token)]);
 
-                res.status(200).json({token});
+                res.status(200).json(token);
             }
         } catch (error) {
             throw new Handler().errorResponse(error.name, error.message);

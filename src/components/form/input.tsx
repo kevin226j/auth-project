@@ -1,5 +1,8 @@
 import * as React from 'react';
-import {IInputProps} from '../../interfaces/IInputProps';
+import {IInputProps} from './interfaces/IInputProps';
+import useForm from 'react-hook-form';
+
+import SimpleReactValidator from 'simple-react-validator';
 
 export const Input: React.StatelessComponent<IInputProps> = props => {
     return (
@@ -13,11 +16,11 @@ export const Input: React.StatelessComponent<IInputProps> = props => {
                     name={props.name}
                     className={props.className}
                     placeholder={props.placeHolder}
-                    onChange={onChangeInput(props)}
                     style={{paddingBottom: '10px'}}
+                    onChange={onChangeInput(props)}
                 />
             </div>
-            <h5 style={ErrorMessageStyle(props)}> {props.error}</h5>
+            <div style={ErrorMessageStyle(props)}>{props.error}</div>
         </React.Fragment>
     );
 };
@@ -26,10 +29,15 @@ const ErrorMessageStyle = (props: IInputProps): React.CSSProperties => {
     return {
         margin: '0px',
         top: '-2em',
+        fontSize: '12px',
         position: 'relative',
         display: props.error ? 'block' : '',
         color: props.error ? '#ff0033' : 'none',
     };
+};
+
+const onBlurInput = (props: IInputProps) => (e: React.FocusEvent<HTMLInputElement>) => {
+    props.onBlur(e);
 };
 
 const onChangeInput = (props: IInputProps) => (e: React.ChangeEvent<HTMLInputElement>) => {

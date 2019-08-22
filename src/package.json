@@ -20,7 +20,9 @@
     "jwt-decode": "^2.2.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-router-dom": "^5.0.1"
+    "react-hook-form": "^3.22.0",
+    "react-router-dom": "^5.0.1",
+    "simple-react-validator": "^1.2.2"
   },
   "devDependencies": {
     "awesome-typescript-loader": "^5.2.1",

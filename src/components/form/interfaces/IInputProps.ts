@@ -9,5 +9,8 @@ export interface IInputProps {
     icon?: string;
     id?: string;
 
+    errors?: string;
+
     onChange: (fieldName: string, fieldValue: any) => void;
+    onBlur?: (e: any) => void;
 }
