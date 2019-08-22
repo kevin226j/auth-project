@@ -6,8 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --watch 'lib/**/*.ts' --exec 'ts-node' --respawn --transpileOnly --ignore-watch node_modules lib/server.ts",
-    "build": "webpack --mode production",
-    "start": "NODE_ENV=production nodemon ./dist/server.js"
+    "build": "webpack --mode production && cd ./src && npm run build",
+    "start-watch": "NODE_ENV=production nodemon ./dist/server.js",
+    "preinstall": "cd ./src && npm install",
+    "postinstall": "npm run build",
+    "start": "node ./dist/server.js"
   },
   "author": "",
   "license": "ISC",

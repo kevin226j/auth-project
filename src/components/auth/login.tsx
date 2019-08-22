@@ -4,6 +4,7 @@ import {ILogin, IError} from './interfaces';
 import {Input, Form, Button} from '../form';
 import {required, isEmail} from '../../utils/validators';
 import {responseHandler} from '../../helpers/response_handler';
+import {debounce} from '../../helpers/debounce';
 
 /**
  * Load image from assets
@@ -193,10 +194,10 @@ export class Login extends React.Component<{}, ILoginState> {
                                 disabled={!this.isFormValid()}
                                 id="signin"
                                 name="signin"
-                                onClick={this.onSubmit}
+                                // Add debounce method to limit http calls to server when logging in
+                                onClick={debounce(this.onSubmit, 300)}
                                 label="Login"
                             />
-
                             <div className="social-login">
                                 <span className="social-label">Or login with</span>
                                 <ul className="socials">
