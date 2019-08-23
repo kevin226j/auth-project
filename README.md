@@ -4,14 +4,12 @@ MERN application with Typescript.
 ---
 
 Simple Authentication app using Passport, JWT and Local Strategies. 
----
 
 Looking to expand to Google, Twitter, and Facebook strategies in near future.
----
 
 If cloning, make sure to provide an .env file. 
 
-Steps
+Steps to run project
 ---
 
 1. Clone project
