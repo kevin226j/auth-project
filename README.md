@@ -19,10 +19,13 @@ Steps to run project
 3. Then, `npm start`
 
 Start Server (development):
+---
 
 3a. In root, `npm run dev`
 
 Start Web Server (development):
+---
+
 3b. In /src, `npm start`
 
 Demo: [Here](https://authentication-project-bykevin.herokuapp.com)
