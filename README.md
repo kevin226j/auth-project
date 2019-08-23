@@ -1,14 +1,19 @@
 ## Authentication App Demo
 
-An application built with React/Typescript and Node.js/Typescript.
-Create an .env file containing local db uri: i.e. MONGO_URI=mongodb://localhost/Project_Name
+MERN application with Typescript.
+If cloning, make sure to provide an .env file. 
 
-1. Install dependencies in root and in /src with `npm install`
+1. Clone project
 
-Start Web (development):
+2. At root of project, `npm install`
 
-2. In /src, `npm start`
+3. Then, `npm start`
 
 Start Server (development):
 
-3. In root directory, `npm run dev`
+3a. In root, `npm run dev`
+
+Start Web Server (development):
+3b. In /src, `npm start`
+
+Demo: [Here](https://authentication-project-bykevin.herokuapp.com)
