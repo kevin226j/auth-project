@@ -4,6 +4,7 @@ import {responseHandler} from '../../helpers/response_handler';
 import {CheckBox, Button, Form, Input} from '../form/';
 import {required, isEmail, minLength, matchPasswords} from '../../utils/validators';
 import {IRegister, IError} from './interfaces';
+import {debounce} from '../../helpers/debounce';
 
 /**
  * Load image from assets
@@ -234,7 +235,6 @@ export class Register extends React.Component<{}, ISignUpState> {
                                 onChange={this.onChange}
                                 error={this.state.errors.confirmPassword}
                             />
-
                             <CheckBox
                                 id="isChecked"
                                 name="isChecked"
@@ -242,13 +242,13 @@ export class Register extends React.Component<{}, ISignUpState> {
                                 onCheck={this.onCheck}
                                 label={['I agree all statements in ', <u key={0}>Terms of service</u>]}
                             />
-
                             <Button
                                 disabled={!this.isFormValid()}
                                 id="signup"
                                 name="signup"
                                 label="Register"
-                                onClick={this.onSubmit}
+                                // Add debounce method to limit http calls to server when registering
+                                onClick={debounce(this.onSubmit, 300)}
                             />
                         </Form>
                         <div className="signup-image">
